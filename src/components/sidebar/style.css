@@ -1,0 +1,7 @@
+#sidebar .menu-item.is-active {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+#sidebar .menu-item {
+    background-color: transparent;
+}
