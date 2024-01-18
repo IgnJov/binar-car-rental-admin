@@ -3,6 +3,21 @@ import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
 
 const EnhancedBreadCrumb = () => {
+    function formatPathName(pathName) {
+        const toCapatalize = (string) => {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        };
+
+        // Path Name contains '-' character
+        if (pathName.includes("-")) {
+            return pathName
+                .split("-")
+                .map((path) => toCapatalize(path))
+                .join(" ");
+        } else {
+            return toCapatalize(pathName);
+        }
+    }
     const populateBreadcrumb = () => {
         // Get path names from URL
         const pathNames = window.location.pathname.split("/");
@@ -11,7 +26,7 @@ const EnhancedBreadCrumb = () => {
         // Generate Label and URL for each path name
         let pathNameDetails = pathNames.map((pathName, index) => {
             return {
-                label: pathName.charAt(0).toUpperCase() + pathName.slice(1),
+                label: formatPathName(pathName),
                 url: "/" + pathNames.slice(0, index + 1).join("/"),
             };
         });

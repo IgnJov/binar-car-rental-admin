@@ -37,8 +37,8 @@ function Sidebar() {
             menu: "Cars",
             subMenuItems: [
                 {
-                    text: "Cars",
-                    url: "/cars/cars",
+                    text: "List Car",
+                    url: "/cars/list-car",
                 },
             ],
         },
