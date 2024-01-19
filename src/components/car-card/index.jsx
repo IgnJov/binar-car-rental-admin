@@ -7,8 +7,11 @@ import carImagePlaceholder from "../../assets/car-image-placeholder.jpg";
 
 // Libraries
 import moment from "moment";
+import { useNavigate } from "react-router-dom";
 
-const CarCard = ({ car }) => {
+const CarCard = ({ car, setModalState, setSelectedCar }) => {
+    const navigate = useNavigate();
+
     // Global Data
     const carCategory = {
         small: "2 - 4 people",
@@ -21,7 +24,15 @@ const CarCard = ({ car }) => {
     };
 
     const getAmountOfPeople = (category) => {
-        return carCategory[category] ? carCategory[category] : "Invalid Data";
+        return carCategory[category] || "";
+    };
+
+    const handleClose = () => {
+        setModalState(false);
+    };
+
+    const handleShow = () => {
+        setModalState(true);
     };
 
     return (
@@ -31,6 +42,7 @@ const CarCard = ({ car }) => {
                     <img
                         onError={replaceImageOnError}
                         className="card-img-top w-100"
+                        src={car.image}
                         alt="Car Image"
                     />
                 </div>
@@ -70,6 +82,10 @@ const CarCard = ({ car }) => {
                                 style={{
                                     fontSize: "14px",
                                 }}
+                                onClick={() => {
+                                    setSelectedCar(car);
+                                    handleShow();
+                                }}
                             >
                                 <img className="me-2" src={trashCan} />
                                 Delete
@@ -81,6 +97,11 @@ const CarCard = ({ car }) => {
                                 style={{
                                     backgroundColor: "#5CB85F",
                                     fontSize: "14px",
+                                }}
+                                onClick={() => {
+                                    navigate(
+                                        `/cars/list-car/edit-car?id=${car.id}`
+                                    );
                                 }}
                             >
                                 <img className="me-2" src={editIcon} />

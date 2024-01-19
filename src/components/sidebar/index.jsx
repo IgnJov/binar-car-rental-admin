@@ -49,6 +49,14 @@ function Sidebar() {
     };
 
     const populateMenuItem = () => {
+        const handleMenuClick = (menu) => {
+            setSelectedMenu(menu);
+            const subMenuContainer = document.querySelector(
+                ".sub-menu-container"
+            );
+            subMenuContainer.classList.remove("d-none");
+        };
+
         return menus.map((item, index) => {
             return (
                 <button
@@ -57,7 +65,7 @@ function Sidebar() {
                         (selectedMenu === item.text ? "is-active" : "")
                     }
                     key={index}
-                    onClick={() => setSelectedMenu(item.text)}
+                    onClick={() => handleMenuClick(item.text)}
                 >
                     <img
                         src={item.iconURL}

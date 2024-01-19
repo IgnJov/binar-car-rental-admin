@@ -42,7 +42,7 @@ const EnhancedBreadCrumb = () => {
                             ? "textPrimary"
                             : "inherit"
                     }
-                    href={pathNameDetail.url}
+                    href={index == 0 ? "" : pathNameDetail.url}
                     className="text-decoration-none"
                 >
                     {pathNameDetail.label}

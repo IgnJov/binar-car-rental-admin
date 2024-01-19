@@ -417,7 +417,7 @@ function Dashboard() {
                             id="dashboard-content"
                             className="container-fluid ps-5 pt-4 overflow-auto"
                             style={{
-                                maxHeight: "calc(100vh - 136px)",
+                                height: "calc(100vh - 136px)",
                             }}
                         >
                             <section id="render-car-data-section" className="">
