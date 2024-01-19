@@ -38,10 +38,14 @@ const CarCard = ({ car, setModalState, setSelectedCar }) => {
     return (
         <>
             <div className="card">
-                <div className="p-3" style={{ minHeight: "222px" }}>
+                <div
+                    className="p-3"
+                    style={{ height: "222px", overflow: "hidden" }}
+                >
                     <img
                         onError={replaceImageOnError}
                         className="card-img-top w-100"
+                        style={{ objectFit: "cover" }}
                         src={car.image}
                         alt="Car Image"
                     />

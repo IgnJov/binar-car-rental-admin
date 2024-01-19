@@ -200,7 +200,7 @@ const ListCar = () => {
                         <EnhancedBreadCrumb />
                         <div
                             id="list-car-content"
-                            className="container-fluid pt-4 overflow-auto"
+                            className="container-fluid py-4 overflow-auto"
                             style={{
                                 height: "calc(100vh - 136px)",
                             }}
