@@ -4,7 +4,7 @@ import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Axios from "axios";
 import moment from "moment";
 
@@ -13,7 +13,15 @@ import Sidebar from "../../components/sidebar";
 import Navigation from "../../components/navigation";
 import EnhancedBreadCrumb from "../../components/enhanced-breadcrumb";
 
+import * as constant from "../../constants";
+
+import PropTypes from "prop-types";
+
 const CarForm = ({ mode }) => {
+    PropTypes.checkPropTypes({
+        mode: PropTypes.oneOf(["Add", "Edit"]),
+    });
+
     const navigate = useNavigate();
 
     // Global Data
@@ -59,7 +67,7 @@ const CarForm = ({ mode }) => {
 
         const options = {
             method: "GET",
-            url: `https://api-car-rental.binaracademy.org/admin/car/${id}`,
+            url: `${constant.API_ENDPOINT.getCarById}/${id}`,
             headers,
         };
 
@@ -77,7 +85,7 @@ const CarForm = ({ mode }) => {
 
         const options = {
             method: "PUT",
-            url: `https://api-car-rental.binaracademy.org/admin/car/${id}`,
+            url: `${constant.API_ENDPOINT.updateCarById}/${id}`,
             headers,
             data: getDataFromForm(),
         };
@@ -95,7 +103,7 @@ const CarForm = ({ mode }) => {
     const addNewCar = () => {
         const options = {
             method: "POST",
-            url: `https://api-car-rental.binaracademy.org/admin/car`,
+            url: constant.API_ENDPOINT.addCar,
             headers,
             data: getDataFromForm(),
         };

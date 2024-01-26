@@ -13,6 +13,7 @@ import { Modal, Button } from "react-bootstrap";
 // Assets
 import addIcon from "../../assets/add-icon.svg";
 import carLeave from "../../assets/car-leave.png";
+import * as constant from "../../constants";
 
 const ListCar = () => {
     const navigate = useNavigate();
@@ -55,7 +56,7 @@ const ListCar = () => {
     const getCars = () => {
         const options = {
             method: "GET",
-            url: "https://api-car-rental.binaracademy.org/admin/v2/car",
+            url: constant.API_ENDPOINT.getCars,
             params,
             headers,
         };
@@ -81,8 +82,6 @@ const ListCar = () => {
                     });
                 }
 
-                console.log(name, filteredData);
-
                 setCars(filteredData);
             })
             .catch((error) => {
@@ -95,7 +94,7 @@ const ListCar = () => {
 
         const options = {
             method: "DELETE",
-            url: `https://api-car-rental.binaracademy.org/admin/car/${id}`,
+            url: `${constant.API_ENDPOINT.deleteCarById}/${id}`,
             headers,
         };
 
@@ -200,7 +199,7 @@ const ListCar = () => {
                         <EnhancedBreadCrumb />
                         <div
                             id="list-car-content"
-                            className="container-fluid py-4 overflow-auto"
+                            className="container-fluid ps-4 py-4 overflow-auto"
                             style={{
                                 height: "calc(100vh - 136px)",
                             }}

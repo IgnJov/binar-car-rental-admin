@@ -415,7 +415,7 @@ function Dashboard() {
                         <EnhancedBreadCrumb />
                         <div
                             id="dashboard-content"
-                            className="container-fluid ps-5 pt-4 overflow-auto"
+                            className="container-fluid ps-4 pt-4 overflow-auto"
                             style={{
                                 height: "calc(100vh - 136px)",
                             }}
