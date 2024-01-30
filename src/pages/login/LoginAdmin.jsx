@@ -3,6 +3,7 @@ import { Form, Button } from "react-bootstrap";
 import "./LoginAdmin.css";
 import axios from "axios";
 import { useNavigate } from "react-router";
+import Imglogin from "../../assets/loginadmin.png";
 
 const LoginAdmin = () => {
   const [email, setEmail] = useState("");
@@ -21,8 +22,8 @@ const LoginAdmin = () => {
       })
       .then((response) => {
         localStorage.setItem("token", response.data.access_token);
-        navigate("/dashboard/dashboard");
-        console.log(response);
+        navigate("/dashboard");
+        console.log(response.data);
       })
       .catch((error) => {
         setErrorMessage(error.response.data.message);
@@ -69,7 +70,7 @@ const LoginAdmin = () => {
         </div>
       </div>
       <div className="right">
-        <img src="./assets/loginadmin.png" alt=""></img>
+        <img src={Imglogin} alt=""></img>
       </div>
     </div>
   );
