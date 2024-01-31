@@ -61,8 +61,8 @@ function Sidebar() {
             return (
                 <button
                     className={
-                        "menu-item d-block w-100 border-0 py-3 px-1 " +
-                        (selectedMenu === item.text ? "is-active" : "")
+                        "menu-item d-block w-100 border-0 py-3 px-1" +
+                        (selectedMenu === item.text ? " is-active" : "")
                     }
                     key={index}
                     onClick={() => handleMenuClick(item.text)}
