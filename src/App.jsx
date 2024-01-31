@@ -1,43 +1,70 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+    createBrowserRouter,
+    RouterProvider,
+    Navigate,
+} from "react-router-dom";
 
 // Contents
 import Dashboard from "./pages/dashboard";
 import ListCar from "./pages/list-car";
 import CarForm from "./pages/car-form";
-import LoginAdmin from "./pages/login/LoginAdmin";
-import LayoutAuth from "./LayoutAuth";
-import LayoutDashboard from "./LayoutDashboard";
+import Login from "./pages/login/LoginAdmin";
+import Auth from "./auth/Auth";
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <LayoutAuth />,
+        element: (
+            <>
+                <Navigate to="/login" replace={true} />
+            </>
+        ),
+    },
+    {
+        path: "/login",
+        element: <Auth element={<Login />} />,
+    },
+    {
+        path: "/dashboard",
+        element: (
+            <>
+                <Navigate to="/dashboard/dashboard" replace={true} />
+            </>
+        ),
+    },
+    {
+        path: "/dashboard",
         children: [
             {
-                path: "/",
-                element: <LoginAdmin />,
+                path: "dashboard",
+                element: <Auth element={<Dashboard />} />,
             },
         ],
     },
-
     {
-        element: <LayoutDashboard />,
+        path: "/cars",
+        element: (
+            <>
+                <Navigate to="/cars/list-car" replace={true} />
+            </>
+        ),
+    },
+    {
+        path: "/cars",
         children: [
             {
-                path: "/dashboard/dashboard",
-                element: <Dashboard />,
-            },
-            {
-                path: "/cars/list-car",
-                element: <ListCar />,
-            },
-            {
-                path: "/cars/list-car/add-new-car",
-                element: <CarForm mode={"Add"} />,
-            },
-            {
-                path: "/cars/list-car/edit-car",
-                element: <CarForm mode={"Edit"} />,
+                path: "list-car",
+                element: <Auth element={<ListCar />} />,
+                children: [
+                    {
+                        path: "add-new-car",
+                        element: <Auth element={<CarForm mode={"Add"} />} />,
+                    },
+                    {
+                        path: "edit-car",
+                        element: <Auth element={<CarForm mode={"Edit"} />} />,
+                    },
+                ],
             },
         ],
     },
