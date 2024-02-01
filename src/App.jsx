@@ -9,7 +9,6 @@ import DashboardMenu from "./pages/dashboard-menu/dashboard";
 import CarsMenu from "./pages/cars-menu/cars";
 import Dashboard from "./pages/dashboard";
 import ListCar from "./pages/list-car";
-import CarForm from "./pages/car-form";
 import Login from "./pages/login/LoginAdmin";
 import Auth from "./auth/auth";
 
