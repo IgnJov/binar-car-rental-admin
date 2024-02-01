@@ -6,74 +6,74 @@ import { useNavigate } from "react-router";
 import Imglogin from "../../assets/loginadmin.png";
 
 const LoginAdmin = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
 
-  const navigate = useNavigate();
+    const navigate = useNavigate();
 
-  const handleClick = async (e) => {
-    e.preventDefault();
-    console.log(email, password);
-    await axios
-      .post("https://api-car-rental.binaracademy.org/admin/auth/login", {
-        email: email,
-        password: password,
-      })
-      .then((response) => {
-        localStorage.setItem("token", response.data.access_token);
-        navigate("/dashboard");
-        console.log(response.data);
-      })
-      .catch((error) => {
-        setErrorMessage(error.response.data.message);
-        console.log(error);
-      });
-  };
+    const handleClick = async (e) => {
+        e.preventDefault();
+        console.log(email, password);
+        await axios
+            .post("https://api-car-rental.binaracademy.org/admin/auth/login", {
+                email: email,
+                password: password,
+            })
+            .then((response) => {
+                localStorage.setItem("token", response.data.access_token);
+                navigate("/dashboard");
+                console.log(response.data);
+            })
+            .catch((error) => {
+                setErrorMessage(error.response.data.message);
+                console.log(error);
+            });
+    };
 
-  return (
-    <div className="login">
-      <div className="left">
-        <div className="formtitle">
-          <h1>BCR</h1>
-          <h2>Welcome, Admin BCR</h2>
-          {errorMessage !== "" && (
-            <div className="errorMessage">
-              <span>{errorMessage} </span>
+    return (
+        <div className="login">
+            <div className="left">
+                <div className="formtitle">
+                    <h1>BCR</h1>
+                    <h2>Welcome, Admin BCR</h2>
+                    {errorMessage !== "" && (
+                        <div className="errorMessage">
+                            <span>{errorMessage} </span>
+                        </div>
+                    )}
+                    <Form onSubmit={handleClick}>
+                        <Form.Group>
+                            <Form.Label>Email</Form.Label>
+                            <Form.Control
+                                value={email}
+                                required
+                                onChange={(e) => setEmail(e.target.value)}
+                                type="email"
+                                placeholder="Contoh: johndee@gmail.com"
+                            />
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Password</Form.Label>
+                            <Form.Control
+                                value={password}
+                                required
+                                onChange={(e) => setPassword(e.target.value)}
+                                type="password"
+                                placeholder="6+ karakter"
+                            />
+                        </Form.Group>
+                        <Button type="submit" variant="primary">
+                            Sign In
+                        </Button>
+                    </Form>
+                </div>
             </div>
-          )}
-          <Form onSubmit={handleClick}>
-            <Form.Group>
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                value={email}
-                required
-                onChange={(e) => setEmail(e.target.value)}
-                type="email"
-                placeholder="Enter Email"
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                value={password}
-                required
-                onChange={(e) => setPassword(e.target.value)}
-                type="password"
-                placeholder="Enter Password"
-              />
-            </Form.Group>
-            <Button type="submit" variant="primary">
-              SignIn
-            </Button>
-          </Form>
+            <div className="right">
+                <img src={Imglogin} alt=""></img>
+            </div>
         </div>
-      </div>
-      <div className="right">
-        <img src={Imglogin} alt=""></img>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default LoginAdmin;
