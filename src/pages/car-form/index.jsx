@@ -18,9 +18,9 @@ import * as constant from "../../constants";
 import PropTypes from "prop-types";
 
 const CarForm = ({ mode }) => {
-    PropTypes.checkPropTypes({
+    CarForm.propTypes = {
         mode: PropTypes.oneOf(["Add", "Edit"]),
-    });
+    };
 
     const navigate = useNavigate();
 
@@ -109,9 +109,8 @@ const CarForm = ({ mode }) => {
         Axios.request(options)
             .then((response) => {
                 renderAlert("Data Berhasil Disimpan", "success");
-                navigate("/cars/list-car");
+                window.location.href = "/cars/list-car";
             })
-
             .catch((error) => {
                 renderAlert(error.response.data.message, "danger");
             });

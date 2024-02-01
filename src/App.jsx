@@ -60,7 +60,7 @@ const router = createBrowserRouter([
         element: <Auth element={<CarsMenu />} />,
         children: [
             {
-                path: "list-car",
+                path: "list-car/*",
                 element: <ListCar />,
                 children: [
                     {

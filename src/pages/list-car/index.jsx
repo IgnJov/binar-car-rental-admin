@@ -194,11 +194,11 @@ const ListCar = () => {
     const childRoutes = useRoutes([
         {
             path: "add-new-car",
-            element: <Auth element={<CarForm mode="Add" />} />,
+            element: <CarForm mode="Add" />,
         },
         {
             path: "edit-car",
-            element: <Auth element={<CarForm mode="Edit" />} />,
+            element: <CarForm mode="Edit" />,
         },
     ]);
 
