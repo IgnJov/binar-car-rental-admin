@@ -51,7 +51,9 @@ const CarCard = ({ car, setModalState, setSelectedCar }) => {
                     />
                 </div>
                 <div className="card-body">
-                    <p className="card-subtitle mb-2">{car.name || car.type}</p>
+                    <p className="card-subtitle mb-2">
+                        {car.name || car.type || "Invalid Name"}
+                    </p>
                     <h5 className="card-title mb-3 fs-5">
                         {`Rp ${Intl.NumberFormat("es-ED").format(
                             car.price
