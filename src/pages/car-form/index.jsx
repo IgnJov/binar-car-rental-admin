@@ -88,8 +88,11 @@ const CarForm = ({ mode }) => {
             data: getDataFromForm(),
         };
 
+        console.log(options);
+
         Axios.request(options)
-            .then(() => {
+            .then((response) => {
+                console.log(response);
                 renderAlert("Data Berhasil Disimpan", "success");
             })
 
@@ -103,8 +106,10 @@ const CarForm = ({ mode }) => {
             method: "POST",
             url: constant.API_ENDPOINT.addCar,
             headers,
-            data: getDataFromForm(),
+            body: getDataFromForm(),
         };
+
+        console.log(options);
 
         Axios.request(options)
             .then((response) => {
@@ -144,13 +149,14 @@ const CarForm = ({ mode }) => {
         let photo = handleFile(document.getElementById("photo"));
         let category = document.getElementById("category").value;
 
-        return {
-            name: name,
-            category: category,
-            price: price,
-            status: car.status,
-            image: photo,
-        };
+        const formData = new FormData();
+        formData.append("name", name);
+        formData.append("category", category);
+        formData.append("price", price);
+        formData.append("status", car.status);
+        formData.append("image", photo);
+
+        return formData;
     };
 
     const handleFile = (inputElement) => {
@@ -158,11 +164,7 @@ const CarForm = ({ mode }) => {
 
         if (!file) return null;
 
-        let reader = new FileReader();
-
-        reader.onload = (e) => {
-            return e.target.result;
-        };
+        return file;
     };
 
     const handleFormSubmit = () => {

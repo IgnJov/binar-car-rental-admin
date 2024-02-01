@@ -143,6 +143,7 @@ const ListCar = () => {
     };
 
     const populateCarList = () => {
+        console.log(cars);
         const filteredData = cars.filter((car) => {
             return selectedCapacity === "all"
                 ? true

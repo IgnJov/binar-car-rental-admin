@@ -46,7 +46,7 @@ const CarCard = ({ car, setModalState, setSelectedCar }) => {
                         onError={replaceImageOnError}
                         className="card-img-top w-100"
                         style={{ objectFit: "cover" }}
-                        src={car.image}
+                        src={car.image || carImagePlaceholder}
                         alt="Car Image"
                     />
                 </div>
