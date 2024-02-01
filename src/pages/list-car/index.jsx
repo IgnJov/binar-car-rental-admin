@@ -3,11 +3,13 @@ import Sidebar from "../../components/sidebar";
 import Navigation from "../../components/navigation";
 import EnhancedBreadCrumb from "../../components/enhanced-breadcrumb";
 import CarCard from "../../components/car-card";
+import Auth from "../../auth/auth";
+import CarForm from "../car-form";
 
 // Libraries
 import { useEffect, useState } from "react";
 import Axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useRoutes } from "react-router-dom";
 import { Modal, Button } from "react-bootstrap";
 
 // Assets
@@ -189,93 +191,110 @@ const ListCar = () => {
         });
     };
 
+    const childRoutes = useRoutes([
+        {
+            path: "add-new-car",
+            element: <Auth element={<CarForm mode="Add" />} />,
+        },
+        {
+            path: "edit-car",
+            element: <Auth element={<CarForm mode="Edit" />} />,
+        },
+    ]);
+
     return (
-        <>
-            <div id="list-car">
-                <div className="row vh-100 m-0 p-0">
-                    <Sidebar />
-                    <div className="col m-0 p-0">
-                        <Navigation />
-                        <EnhancedBreadCrumb />
-                        <div
-                            id="list-car-content"
-                            className="container-fluid ps-4 py-4 overflow-auto"
-                            style={{
-                                height: "calc(100vh - 136px)",
-                            }}
-                        >
-                            <div className="header mb-4">
-                                <div className="row">
-                                    <div className="col mb-3">
-                                        <h3 className="fw-bold">List Car</h3>
+        childRoutes || (
+            <>
+                <div id="list-car">
+                    <div className="row vh-100 m-0 p-0">
+                        <Sidebar />
+                        <div className="col m-0 p-0">
+                            <Navigation />
+                            <EnhancedBreadCrumb />
+                            <div
+                                id="list-car-content"
+                                className="container-fluid ps-4 py-4 overflow-auto"
+                                style={{
+                                    height: "calc(100vh - 136px)",
+                                }}
+                            >
+                                <div className="header mb-4">
+                                    <div className="row">
+                                        <div className="col mb-3">
+                                            <h3 className="fw-bold">
+                                                List Car
+                                            </h3>
+                                        </div>
+                                        <div className="col">
+                                            <button
+                                                className="btn btn-primary float-end"
+                                                onClick={() => {
+                                                    navigate(
+                                                        "/cars/list-car/add-new-car"
+                                                    );
+                                                }}
+                                            >
+                                                <img
+                                                    className="me-3"
+                                                    src={addIcon}
+                                                    alt=""
+                                                />
+                                                Add New Car
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div className="col">
-                                        <button
-                                            className="btn btn-primary float-end"
-                                            onClick={() => {
-                                                navigate(
-                                                    "/cars/list-car/add-new-car"
-                                                );
-                                            }}
-                                        >
-                                            <img
-                                                className="me-3"
-                                                src={addIcon}
-                                                alt=""
-                                            />
-                                            Add New Car
-                                        </button>
+                                    <div className="row">
+                                        <div className="col-auto">
+                                            {populateCarCapacityButton()}
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="row">
-                                    <div className="col-auto">
-                                        {populateCarCapacityButton()}
-                                    </div>
+                                <div className="row g-4">
+                                    {populateCarList()}
                                 </div>
                             </div>
-                            <div className="row g-4">{populateCarList()}</div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <Modal show={show} onHide={handleClose}>
-                <Modal.Body className="px-4 py-4 text-center">
-                    <img
-                        src={carLeave}
-                        alt="car leave"
-                        style={{ width: "153px" }}
-                        className="mb-4"
-                    />
-                    <h5 className="mb-4">Menghapus Data Mobil</h5>
-                    <p className="mb-4" style={{ fontSize: "14px" }}>
-                        Setelah dihapus, data mobil tidak dapat dikembalikan.
-                        Yakin ingin menghapus?
-                    </p>
+                <Modal show={show} onHide={handleClose}>
+                    <Modal.Body className="px-4 py-4 text-center">
+                        <img
+                            src={carLeave}
+                            alt="car leave"
+                            style={{ width: "153px" }}
+                            className="mb-4"
+                        />
+                        <h5 className="mb-4">Menghapus Data Mobil</h5>
+                        <p className="mb-4" style={{ fontSize: "14px" }}>
+                            Setelah dihapus, data mobil tidak dapat
+                            dikembalikan. Yakin ingin menghapus?
+                        </p>
 
-                    <div className="modal-button-container w-100">
-                        <Button
-                            variant="primary"
-                            onClick={() => {
-                                handleClose();
-                                deleteCarById(selectedCar.id);
-                            }}
-                            style={{ width: "87px" }}
-                            className="me-3"
-                        >
-                            Ya
-                        </Button>
-                        <Button
-                            variant="outline-primary"
-                            onClick={handleClose}
-                            style={{ width: "87px" }}
-                        >
-                            Tidak
-                        </Button>
-                    </div>
-                </Modal.Body>
-            </Modal>
-        </>
+                        <div className="modal-button-container w-100">
+                            <Button
+                                variant="primary"
+                                onClick={() => {
+                                    handleClose();
+                                    deleteCarById(selectedCar.id);
+                                }}
+                                style={{ width: "87px" }}
+                                className="me-3"
+                            >
+                                Ya
+                            </Button>
+                            <Button
+                                variant="outline-primary"
+                                onClick={handleClose}
+                                style={{ width: "87px" }}
+                            >
+                                Tidak
+                            </Button>
+                        </div>
+                    </Modal.Body>
+                </Modal>
+            </>
+        )
     );
 };
 

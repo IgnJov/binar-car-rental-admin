@@ -5,8 +5,8 @@ import {
 } from "react-router-dom";
 
 // Contents
-import DashboardMenu from "./pages/dashboardMenu/dashboard";
-import CarsMenu from "./pages/carsMenu/cars";
+import DashboardMenu from "./pages/dashboard-menu/dashboard";
+import CarsMenu from "./pages/cars-menu/cars";
 import Dashboard from "./pages/dashboard";
 import ListCar from "./pages/list-car";
 import CarForm from "./pages/car-form";
@@ -65,12 +65,12 @@ const router = createBrowserRouter([
                 element: <ListCar />,
                 children: [
                     {
-                        path: "add",
-                        element: <Auth element={<CarForm mode="Add" />} />,
+                        path: "add-new-car",
+                        element: <ListCar />,
                     },
                     {
-                        path: "edit/:id",
-                        element: <Auth element={<CarForm mode="Edit" />} />,
+                        path: "edit-car",
+                        element: <ListCar />,
                     },
                 ],
             },
