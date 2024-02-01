@@ -10,7 +10,7 @@ import CarsMenu from "./pages/cars-menu/cars";
 import Dashboard from "./pages/dashboard";
 import ListCar from "./pages/list-car";
 import Login from "./pages/login/LoginAdmin";
-import Auth from "./auth/auth";
+import Auth from "../src/auth/Auth";
 
 const router = createBrowserRouter([
     {
