@@ -5,11 +5,13 @@ import {
 } from "react-router-dom";
 
 // Contents
+import DashboardMenu from "./pages/dashboardMenu/dashboard";
+import CarsMenu from "./pages/carsMenu/cars";
 import Dashboard from "./pages/dashboard";
 import ListCar from "./pages/list-car";
 import CarForm from "./pages/car-form";
 import Login from "./pages/login/LoginAdmin";
-import Auth from "./auth/Auth";
+import Auth from "./auth/auth";
 
 const router = createBrowserRouter([
     {
@@ -22,7 +24,11 @@ const router = createBrowserRouter([
     },
     {
         path: "/login",
-        element: <Auth element={<Login />} />,
+        element: localStorage.getItem("token") ? (
+            <Navigate to="/dashboard" replace={true} />
+        ) : (
+            <Login />
+        ),
     },
     {
         path: "/dashboard",
@@ -34,6 +40,7 @@ const router = createBrowserRouter([
     },
     {
         path: "/dashboard",
+        element: <Auth element={<DashboardMenu />} />,
         children: [
             {
                 path: "dashboard",
@@ -51,18 +58,19 @@ const router = createBrowserRouter([
     },
     {
         path: "/cars",
+        element: <Auth element={<CarsMenu />} />,
         children: [
             {
                 path: "list-car",
-                element: <Auth element={<ListCar />} />,
+                element: <ListCar />,
                 children: [
                     {
-                        path: "add-new-car",
-                        element: <Auth element={<CarForm mode={"Add"} />} />,
+                        path: "add",
+                        element: <Auth element={<CarForm mode="Add" />} />,
                     },
                     {
-                        path: "edit-car",
-                        element: <Auth element={<CarForm mode={"Edit"} />} />,
+                        path: "edit/:id",
+                        element: <Auth element={<CarForm mode="Edit" />} />,
                     },
                 ],
             },

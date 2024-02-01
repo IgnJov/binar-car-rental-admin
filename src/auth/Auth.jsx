@@ -4,7 +4,6 @@ import Login from "../pages/login/LoginAdmin";
 
 const Auth = ({ element }) => {
     const token = localStorage.getItem("token");
-    console.log(token);
     return token ? element : <Login />;
 };
 

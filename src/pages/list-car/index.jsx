@@ -74,7 +74,6 @@ const ListCar = () => {
                 const name = new URLSearchParams(window.location.search).get(
                     "name"
                 );
-                console.log(filteredData);
                 if (name) {
                     filteredData = filteredData.filter((car) => {
                         return car.name
