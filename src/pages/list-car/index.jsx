@@ -3,7 +3,6 @@ import Sidebar from "../../components/sidebar";
 import Navigation from "../../components/navigation";
 import EnhancedBreadCrumb from "../../components/enhanced-breadcrumb";
 import CarCard from "../../components/car-card";
-import Auth from "../../auth/auth";
 import CarForm from "../car-form";
 
 // Libraries
@@ -11,6 +10,7 @@ import { useEffect, useState } from "react";
 import Axios from "axios";
 import { useNavigate, useRoutes } from "react-router-dom";
 import { Modal, Button } from "react-bootstrap";
+import Pagination from "react-bootstrap/Pagination";
 
 // Assets
 import addIcon from "../../assets/add-icon.svg";
@@ -44,6 +44,7 @@ const ListCar = () => {
         pageSize: 10,
     });
     const [show, setShow] = useState(false);
+    const [pagination, setPagination] = useState({});
 
     // Lifecycle
     useEffect(() => {
@@ -51,8 +52,12 @@ const ListCar = () => {
     }, []);
 
     useEffect(() => {
+        getCars();
+    }, [params]);
+
+    useEffect(() => {
         populateCarList();
-    }, [selectedCapacity, cars]);
+    }, [selectedCapacity]);
 
     // API
     const getCars = () => {
@@ -65,6 +70,13 @@ const ListCar = () => {
 
         Axios.request(options)
             .then((response) => {
+                // Set Pagination
+                setPagination({
+                    page: response.data.page,
+                    pageCount: response.data.pageCount,
+                    count: response.data.count,
+                });
+
                 // Filter by capacity
                 let filteredData = response.data.cars.filter((car) => {
                     return selectedCapacity === "all"
@@ -192,6 +204,56 @@ const ListCar = () => {
         });
     };
 
+    const renderPagination = () => {
+        let active = params.page;
+        let items = [];
+
+        items.push(
+            <Pagination.Prev
+                key="prev"
+                onClick={() => {
+                    setParams({
+                        ...params,
+                        page: active - 1,
+                    });
+                }}
+                disabled={active === 1}
+            />
+        );
+
+        for (let number = 1; number <= pagination.pageCount; number++) {
+            items.push(
+                <Pagination.Item
+                    key={number}
+                    active={number === active}
+                    onClick={() => {
+                        setParams({
+                            ...params,
+                            page: number,
+                        });
+                    }}
+                >
+                    {number}
+                </Pagination.Item>
+            );
+        }
+
+        items.push(
+            <Pagination.Next
+                key="next"
+                onClick={() => {
+                    setParams({
+                        ...params,
+                        page: active + 1,
+                    });
+                }}
+                disabled={active === pagination.pageCount}
+            />
+        );
+
+        return items;
+    };
+
     const childRoutes = useRoutes([
         {
             path: "add-new-car",
@@ -252,6 +314,11 @@ const ListCar = () => {
                                 </div>
                                 <div className="row g-4">
                                     {populateCarList()}
+                                </div>
+                                <div className="row mt-3 mx-1" id="pagination">
+                                    <Pagination>
+                                        {renderPagination()}
+                                    </Pagination>
                                 </div>
                             </div>
                         </div>
