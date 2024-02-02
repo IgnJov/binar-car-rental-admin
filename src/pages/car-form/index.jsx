@@ -106,10 +106,8 @@ const CarForm = ({ mode }) => {
             method: "POST",
             url: constant.API_ENDPOINT.addCar,
             headers,
-            body: getDataFromForm(),
+            data: getDataFromForm(),
         };
-
-        console.log(options);
 
         Axios.request(options)
             .then((response) => {
