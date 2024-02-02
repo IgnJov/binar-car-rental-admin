@@ -81,6 +81,8 @@ const CarForm = ({ mode }) => {
     const editCarDetail = () => {
         let id = new URLSearchParams(window.location.search).get("id");
 
+        if (!validateForm()) return;
+
         const options = {
             method: "PUT",
             url: `${constant.API_ENDPOINT.updateCarById}/${id}`,
@@ -88,12 +90,10 @@ const CarForm = ({ mode }) => {
             data: getDataFromForm(),
         };
 
-        console.log(options);
-
         Axios.request(options)
             .then((response) => {
-                console.log(response);
                 renderAlert("Data Berhasil Disimpan", "success");
+                window.location.href = "/cars/list-car";
             })
 
             .catch(() => {
@@ -102,6 +102,8 @@ const CarForm = ({ mode }) => {
     };
 
     const addNewCar = () => {
+        if (!validateForm()) return;
+
         const options = {
             method: "POST",
             url: constant.API_ENDPOINT.addCar,
@@ -117,6 +119,8 @@ const CarForm = ({ mode }) => {
             .catch((error) => {
                 renderAlert(error.response.data.message, "danger");
             });
+
+        resetForm();
     };
 
     const renderAlert = (message, status) => {
@@ -157,10 +161,32 @@ const CarForm = ({ mode }) => {
         return formData;
     };
 
+    const validateForm = () => {
+        let formData = getDataFromForm();
+
+        if (
+            formData.get("name") === "" ||
+            formData.get("price") === "" ||
+            formData.get("category") === "" ||
+            formData.get("image") == ""
+        ) {
+            renderAlert("Data Tidak Boleh Kosong", "danger");
+
+            return false;
+        }
+
+        return true;
+    };
+
+    const resetForm = () => {
+        document.getElementById("car-form").reset();
+        document.getElementById("photo").value = null;
+    };
+
     const handleFile = (inputElement) => {
         let file = inputElement.files[0];
 
-        if (!file) return null;
+        if (!file) return "";
 
         return file;
     };
@@ -263,7 +289,11 @@ const CarForm = ({ mode }) => {
                                     Foto <span className="text-danger">*</span>
                                 </Form.Label>
                                 <Col sm={5}>
-                                    <Form.Control type="file" />
+                                    <Form.Control
+                                        type="file"
+                                        accept=".jpg,.jpeg,.png"
+                                        maxSize={2 * 1024 * 1024}
+                                    />
                                     <Form.Text id="photoHelpBlock" muted>
                                         File size max. 2MB
                                     </Form.Text>
@@ -305,7 +335,7 @@ const CarForm = ({ mode }) => {
                                 variant="outline-primary"
                                 className="me-3"
                                 onClick={() => {
-                                    navigate("/cars/list-car");
+                                    location.href = "/cars/list-car";
                                 }}
                             >
                                 Cancel
