@@ -8,9 +8,15 @@ import carImagePlaceholder from "../../assets/car-image-placeholder.jpg";
 // Libraries
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
-const CarCard = ({ car, setModalState, setSelectedCar }) => {
+// Redux
+import { selectCar } from "../../redux/slices/carSlice";
+
+const CarCard = ({ car, setModalState }) => {
+    // Hook
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     // Global Data
     const carCategory = {
@@ -89,7 +95,7 @@ const CarCard = ({ car, setModalState, setSelectedCar }) => {
                                     fontSize: "14px",
                                 }}
                                 onClick={() => {
-                                    setSelectedCar(car);
+                                    dispatch(selectCar(car));
                                     handleShow();
                                 }}
                             >

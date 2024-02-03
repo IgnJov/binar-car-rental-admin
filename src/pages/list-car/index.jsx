@@ -11,14 +11,26 @@ import Axios from "axios";
 import { useNavigate, useRoutes } from "react-router-dom";
 import { Modal, Button } from "react-bootstrap";
 import Pagination from "react-bootstrap/Pagination";
+import { useSelector, useDispatch } from "react-redux";
 
 // Assets
 import addIcon from "../../assets/add-icon.svg";
 import carLeave from "../../assets/car-leave.png";
 import * as constant from "../../constants";
 
+// Redux
+import {
+    fetchCarsRequest,
+    fetchCarsSuccess,
+    fetchCarsFailure,
+    selectCar,
+    deselectCar,
+} from "../../redux/slices/carSlice";
+
 const ListCar = () => {
+    // Hooks
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     // Global Data
     const token =
@@ -34,10 +46,12 @@ const ListCar = () => {
         large: "6 - 8 people",
     };
 
+    // Slice
+    const car = useSelector((state) => state.car);
+
     // State
     const [selectedCapacity, setSelectedCapacity] = useState("all"); // ["all", "small", "medium", "large"]
-    const [cars, setCars] = useState([]);
-    const [selectedCar, setSelectedCar] = useState({});
+    const [filteredCars, setFilteredCars] = useState([]);
     const [params, setParams] = useState({
         name: "",
         page: 1,
@@ -61,6 +75,8 @@ const ListCar = () => {
 
     // API
     const getCars = () => {
+        dispatch(fetchCarsRequest);
+
         const options = {
             method: "GET",
             url: constant.API_ENDPOINT.getCars,
@@ -70,6 +86,9 @@ const ListCar = () => {
 
         Axios.request(options)
             .then((response) => {
+                // Set Cars state in reducer
+                dispatch(fetchCarsSuccess(response.data.cars));
+
                 // Set Pagination
                 setPagination({
                     page: response.data.page,
@@ -96,9 +115,10 @@ const ListCar = () => {
                     });
                 }
 
-                setCars(filteredData);
+                setFilteredCars(filteredData);
             })
             .catch((error) => {
+                dispatch(fetchCarsFailure(error.message));
                 console.log(error);
             });
     };
@@ -155,8 +175,8 @@ const ListCar = () => {
     };
 
     const populateCarList = () => {
-        console.log(cars);
-        const filteredData = cars.filter((car) => {
+        console.log(filteredCars);
+        const filteredData = filteredCars.filter((car) => {
             return selectedCapacity === "all"
                 ? true
                 : car.category === selectedCapacity;
@@ -169,11 +189,7 @@ const ListCar = () => {
                     className="col-3"
                     style={{ minWidth: "300px", maxWidth: "351px" }}
                 >
-                    <CarCard
-                        car={car}
-                        setModalState={setShow}
-                        setSelectedCar={setSelectedCar}
-                    />
+                    <CarCard car={car} setModalState={setShow} />
                 </div>
             );
         });
@@ -344,7 +360,7 @@ const ListCar = () => {
                                 variant="primary"
                                 onClick={() => {
                                     handleClose();
-                                    deleteCarById(selectedCar.id);
+                                    deleteCarById(car.selectedCar.id);
                                 }}
                                 style={{ width: "87px" }}
                                 className="me-3"
