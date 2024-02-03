@@ -39,7 +39,7 @@ function Navigation() {
 
     const handleLogout = () => {
         localStorage.removeItem("token");
-        navigate("/login", { replace: true });
+        location.href = "/login";
     };
 
     return (
