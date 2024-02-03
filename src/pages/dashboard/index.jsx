@@ -38,6 +38,8 @@ function Dashboard() {
     // State
     const [orderReport, setOrderReport] = useState([]);
     const [orderList, setOrderList] = useState([]);
+    const [pagination, setPagination] = useState({});
+    const [pageButtons, setPageButtons] = useState([]);
 
     // Table Properties State
     const [order, setOrder] = useState({
@@ -67,6 +69,18 @@ function Dashboard() {
         renderChart();
         renderTable();
     }, [orderReport, orderList]);
+
+    useEffect(() => {
+        getOrderList(
+            `${order.column}:${order.direction}`,
+            page + 1,
+            rowsPerPage
+        );
+    }, [order, page, rowsPerPage]);
+
+    useEffect(() => {
+        populatePageButtons();
+    }, [page, pagination.pageCount]);
 
     // API Call
     function getDailyOrderReport(
@@ -116,6 +130,12 @@ function Dashboard() {
         )
             .then((response) => {
                 setOrderList(response.data.orders);
+
+                setPagination({
+                    page: response.data.page,
+                    pageSize: response.data.pageSize,
+                    pageCount: response.data.pageCount,
+                });
                 removeLoading(document.querySelector(".table-container"));
             })
             .catch((error) => {
@@ -331,8 +351,8 @@ function Dashboard() {
                         <TableRow>
                             <TablePagination
                                 page={page}
-                                count={orderList.length}
-                                rowsPerPage={rowsPerPage}
+                                count={pagination.pageCount}
+                                rowsPerPage={pagination.pageSize}
                                 onPageChange={(e, newPage) => {
                                     setPage(newPage);
                                 }}
@@ -362,7 +382,7 @@ function Dashboard() {
 
     const populatePageDropdown = () => {
         let pages = [];
-        for (let i = 1; i <= pageCount; i++) {
+        for (let i = 1; i <= pagination.pageCount; i++) {
             pages.push(
                 <option key={i} value={i - 1}>
                     {i}
@@ -374,7 +394,8 @@ function Dashboard() {
 
     const populatePageButtons = () => {
         let buttons = [];
-        for (let i = 1; i <= pageCount; i++) {
+        for (let i = 1; i <= 3; i++) {
+            console.log("page", page);
             buttons.push(
                 <button
                     key={i}
@@ -394,7 +415,38 @@ function Dashboard() {
             );
         }
 
-        return buttons;
+        // Load more '...' page button
+        if (pagination.pageCount > 5) {
+            buttons.push(
+                <button
+                    key={3}
+                    className="btn btn-outline-secondary"
+                    disabled={page >= pagination.pageCount - 3}
+                >
+                    ...
+                </button>
+            );
+        }
+
+        buttons.push(
+            <button
+                key={4}
+                className={`btn
+                    ${
+                        page === pagination.pageCount - 1
+                            ? "btn-primary active"
+                            : "btn-outline-secondary"
+                    }
+                `}
+                onClick={() => {
+                    setPage(pagination.pageCount - 1);
+                }}
+            >
+                {pagination.pageCount}
+            </button>
+        );
+
+        setPageButtons(buttons);
     };
 
     // Event Handler
@@ -530,7 +582,9 @@ function Dashboard() {
                                                         alt=""
                                                     />
                                                 </button>
-                                                {populatePageButtons()}
+                                                <div className="page-button-container">
+                                                    {pageButtons}
+                                                </div>
                                                 <button
                                                     className="btn btn-outline-secondary"
                                                     disabled={
