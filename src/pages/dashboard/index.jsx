@@ -11,6 +11,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import Pagination from "react-bootstrap/Pagination";
 import Axios from "axios";
 import moment from "moment";
 import {
@@ -30,27 +31,27 @@ import Sidebar from "../../components/sidebar";
 import EnhancedBreadCrumb from "../../components/enhanced-breadcrumb";
 
 // Assets
-import doubleArrowLeft from "../../assets/double-arrow-left.svg";
-import doubleArrowRight from "../../assets/double-arrow-right.svg";
 import sortingIcon from "../../assets/sorting-icon.svg";
 
 function Dashboard() {
     // State
     const [orderReport, setOrderReport] = useState([]);
     const [orderList, setOrderList] = useState([]);
-    const [pagination, setPagination] = useState({});
-    const [pageButtons, setPageButtons] = useState([]);
+    const [pagination, setPagination] = useState({
+        page: 1,
+        pageSize: 10,
+        pageCount: null,
+    });
 
     // Table Properties State
     const [order, setOrder] = useState({
         column: null,
         direction: "asc",
     });
-    const [page, setPage] = useState(0);
+    const [page, setPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
     // Global Data
-    let pageCount = 0;
     let selectedMonth = moment().month();
     const token = localStorage.getItem("token");
     const headers = {
@@ -69,16 +70,8 @@ function Dashboard() {
     }, [orderReport, orderList]);
 
     useEffect(() => {
-        getOrderList(
-            `${order.column}:${order.direction}`,
-            page + 1,
-            rowsPerPage
-        );
+        getOrderList(`${order.column}:${order.direction}`, page, rowsPerPage);
     }, [order, page, rowsPerPage]);
-
-    useEffect(() => {
-        populatePageButtons();
-    }, [page, pagination.pageCount]);
 
     // API Call
     function getDailyOrderReport(
@@ -97,15 +90,6 @@ function Dashboard() {
                         orderCount: data.orderCount,
                     };
                 });
-
-                // let dummyData = [];
-                // for (let i = 1; i <= moment().daysInMonth(); i++) {
-                //     dummyData.push({
-                //         day: i,
-                //         orderCount: Math.floor(Math.random() * 10),
-                //     });
-                // }
-                // let report = dummyData;
 
                 setOrderReport(report);
                 removeLoading(document.querySelector(".chart-container"));
@@ -134,6 +118,7 @@ function Dashboard() {
                     pageSize: response.data.pageSize,
                     pageCount: response.data.pageCount,
                 });
+
                 removeLoading(document.querySelector(".table-container"));
             })
             .catch((error) => {
@@ -214,8 +199,6 @@ function Dashboard() {
     };
 
     const renderTable = () => {
-        pageCount = Math.ceil(orderList.length / rowsPerPage);
-
         let columns = [
             { field: "no", headerName: "No" },
             { field: "userEmail", headerName: "User Email" },
@@ -365,6 +348,67 @@ function Dashboard() {
         );
     };
 
+    const renderPagination = () => {
+        let currentPage = parseInt(page);
+        let items = [];
+
+        const generatePaginationItem = (i) => {
+            return (
+                <Pagination.Item
+                    key={i}
+                    active={i === currentPage}
+                    onClick={() => {
+                        setPage(i);
+                    }}
+                >
+                    {i}
+                </Pagination.Item>
+            );
+        };
+
+        items.push(
+            <Pagination.Prev
+                key="prev"
+                onClick={() => {
+                    setPage(currentPage - 1);
+                }}
+                disabled={currentPage === 1}
+            />
+        );
+
+        if (pagination.pageCount - currentPage < 5) {
+            for (let i = currentPage; i <= pagination.pageCount; i++) {
+                items.push(generatePaginationItem(i));
+            }
+        } else {
+            for (let i = currentPage; i <= currentPage + 3; i++) {
+                items.push(generatePaginationItem(i));
+            }
+
+            items.push(
+                <Pagination.Ellipsis
+                    key="ellipsis"
+                    onClick={() => {
+                        setPage(currentPage + 4);
+                    }}
+                />
+            );
+            items.push(generatePaginationItem(pagination.pageCount));
+        }
+
+        items.push(
+            <Pagination.Next
+                key="next"
+                onClick={() => {
+                    setPage(currentPage + 1);
+                }}
+                disabled={currentPage === pagination.pageCount}
+            />
+        );
+
+        return items;
+    };
+
     const populateMonthDropdown = () => {
         let months = moment.months();
         let currentYear = moment().year();
@@ -382,69 +426,12 @@ function Dashboard() {
         let pages = [];
         for (let i = 1; i <= pagination.pageCount; i++) {
             pages.push(
-                <option key={i} value={i - 1}>
+                <option key={i} value={i}>
                     {i}
                 </option>
             );
         }
         return pages;
-    };
-
-    const populatePageButtons = () => {
-        let buttons = [];
-        for (let i = 1; i <= 3; i++) {
-            console.log("page", page);
-            buttons.push(
-                <button
-                    key={i}
-                    className={`btn
-                        ${
-                            page === i - 1
-                                ? "btn-primary active"
-                                : "btn-outline-secondary"
-                        }
-                    `}
-                    onClick={() => {
-                        setPage(i - 1);
-                    }}
-                >
-                    {i}
-                </button>
-            );
-        }
-
-        // Load more '...' page button
-        if (pagination.pageCount > 5) {
-            buttons.push(
-                <button
-                    key={3}
-                    className="btn btn-outline-secondary"
-                    disabled={page >= pagination.pageCount - 3}
-                >
-                    ...
-                </button>
-            );
-        }
-
-        buttons.push(
-            <button
-                key={4}
-                className={`btn
-                    ${
-                        page === pagination.pageCount - 1
-                            ? "btn-primary active"
-                            : "btn-outline-secondary"
-                    }
-                `}
-                onClick={() => {
-                    setPage(pagination.pageCount - 1);
-                }}
-            >
-                {pagination.pageCount}
-            </button>
-        );
-
-        setPageButtons(buttons);
     };
 
     // Event Handler
@@ -550,15 +537,16 @@ function Dashboard() {
                                                     className="form-select"
                                                     id="pageSelection"
                                                     defaultValue={1}
-                                                    onChange={(e) => {
-                                                        setPage(e.target.value);
-                                                    }}
                                                 >
                                                     {populatePageDropdown()}
                                                 </select>
                                                 <button
                                                     className="btn btn-primary"
                                                     onClick={() => {
+                                                        let page =
+                                                            document.querySelector(
+                                                                "#pageSelection"
+                                                            ).value;
                                                         setPage(page);
                                                     }}
                                                 >
@@ -567,37 +555,9 @@ function Dashboard() {
                                             </div>
                                         </div>
                                         <div className="col-auto ms-auto d-flex align-items-end">
-                                            <div className="input-group">
-                                                <button
-                                                    className="btn btn-outline-secondary"
-                                                    disabled={page === 0}
-                                                    onClick={() => {
-                                                        setPage(page - 1);
-                                                    }}
-                                                >
-                                                    <img
-                                                        src={doubleArrowLeft}
-                                                        alt=""
-                                                    />
-                                                </button>
-                                                <div className="page-button-container">
-                                                    {pageButtons}
-                                                </div>
-                                                <button
-                                                    className="btn btn-outline-secondary"
-                                                    disabled={
-                                                        page === pageCount - 1
-                                                    }
-                                                    onClick={() => {
-                                                        setPage(page + 1);
-                                                    }}
-                                                >
-                                                    <img
-                                                        src={doubleArrowRight}
-                                                        alt=""
-                                                    />
-                                                </button>
-                                            </div>
+                                            <Pagination>
+                                                {renderPagination()}
+                                            </Pagination>
                                         </div>
                                     </div>
                                 </div>

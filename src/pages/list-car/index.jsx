@@ -71,6 +71,10 @@ const ListCar = () => {
         populateCarList();
     }, [selectedCapacity]);
 
+    useEffect(() => {
+        renderPagination();
+    }, [pagination]);
+
     // API
     const getCars = () => {
         dispatch(fetchCarsRequest);
@@ -173,7 +177,6 @@ const ListCar = () => {
     };
 
     const populateCarList = () => {
-        console.log(filteredCars);
         const filteredData = filteredCars.filter((car) => {
             return selectedCapacity === "all"
                 ? true
@@ -222,6 +225,23 @@ const ListCar = () => {
         let active = params.page;
         let items = [];
 
+        const generatePaginationItem = (i) => {
+            return (
+                <Pagination.Item
+                    key={i}
+                    active={i === active}
+                    onClick={() => {
+                        setParams({
+                            ...params,
+                            page: i,
+                        });
+                    }}
+                >
+                    {i}
+                </Pagination.Item>
+            );
+        };
+
         items.push(
             <Pagination.Prev
                 key="prev"
@@ -235,21 +255,27 @@ const ListCar = () => {
             />
         );
 
-        for (let number = 1; number <= pagination.pageCount; number++) {
+        if (pagination.pageCount - params.page <= 5) {
+            for (let i = active; i <= pagination.pageCount; i++) {
+                items.push(generatePaginationItem(i));
+            }
+        } else {
+            for (let i = active; i <= active + 3; i++) {
+                items.push(generatePaginationItem(i));
+            }
+
             items.push(
-                <Pagination.Item
-                    key={number}
-                    active={number === active}
+                <Pagination.Ellipsis
+                    key="ellipsis"
                     onClick={() => {
                         setParams({
                             ...params,
-                            page: number,
+                            page: active + 4,
                         });
                     }}
-                >
-                    {number}
-                </Pagination.Item>
+                />
             );
+            items.push(generatePaginationItem(pagination.count));
         }
 
         items.push(
