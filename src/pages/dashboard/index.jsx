@@ -52,9 +52,7 @@ function Dashboard() {
     // Global Data
     let pageCount = 0;
     let selectedMonth = moment().month();
-    const token =
-        localStorage.getItem("access_token") ??
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGJjci5pbyIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTY2NTI0MjUwOX0.ZTx8L1MqJ4Az8KzoeYU2S614EQPnqk6Owv03PUSnkzc";
+    const token = localStorage.getItem("token");
     const headers = {
         Access_token: token,
     };
