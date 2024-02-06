@@ -1,6 +1,6 @@
-# Binar Car Rental Admin CMS - Web Application
+# Binar Car Rental CMS - Web Application
 
-Welcome to the Binar Car Rental Admin CMS, a web-based content management system designed specifically for administrative tasks related to the Binar Car Rental application. Developed as part of the Binar Academy Platinum Level Final Project, this CMS empowers administrators to manage authentication, view insightful dashboards, and efficiently handle the car catalog list.
+Welcome to the Binar Car Rental CMS, a web-based content management system designed specifically for administrative tasks related to the Binar Car Rental application. Developed as part of the Binar Academy Platinum Level Final Project, this CMS empowers administrators to manage authentication, view insightful dashboards, and efficiently handle the car catalog list.
 
 ## Table of Contents
 - [Features](#features)
@@ -8,6 +8,7 @@ Welcome to the Binar Car Rental Admin CMS, a web-based content management system
 - [Team Members](#team-members)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Live Preview](#live-preview)
 
 ## Features
 
@@ -41,3 +42,6 @@ Welcome to the Binar Car Rental Admin CMS, a web-based content management system
 
 1. Start the development server: `npm start dev`
 2. Open your browser and navigate to `http://localhost:3000`
+
+## Live Preview
+Deployed on Netlify: https://bcr-admin-cms.netlify.app/
